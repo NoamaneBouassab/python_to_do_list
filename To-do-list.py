@@ -1,25 +1,32 @@
 
 
-Tasks = ['Coding','Deutsch']
 
-def show_tasks() : 
-    for index,task in enumerate(Tasks) : 
-        print(f"{index+1} -  {task}")
-
-def add_tasks() :
-    new_task = input("Neue Aufgabe hinzufügen: ")
-    Tasks.append(new_task)
-
-def delete_tasks() :
-    show_tasks()
-    del_nummer = int(input("Geben Sie die Nummer der Aufgabe ein,die Sie löschen möchten : "))
-    if del_nummer <= len(Tasks) and del_nummer >=1 : 
-     Tasks.pop(del_nummer-1)
-     print("Die Aufgabe wurde erfolgreich gelöscht")
-    else : 
-     print("Diese Aufgabe existiert nicht !!")
+class ToDoManager:
     
+    def __init__(self):
+        self.Tasks = ['Coding','Deutsch']
+
+
+    def show_tasks(self) : 
+        for index , task in enumerate(self.Tasks) : 
+            print(f"{index+1} -  {task}")
+
+    def add_tasks(self) :
+        new_task = input("Neue Aufgabe hinzufügen: ")
+        self.Tasks.append(new_task)
+
+    def delete_tasks(self) :
+        self.show_tasks()
+        del_nummer = int(input("Geben Sie die Nummer der Aufgabe ein,die Sie löschen möchten : "))
+        if del_nummer <= len(self.Tasks) and del_nummer >=1 : 
+         self.Tasks.pop(del_nummer-1)
+         print("Die Aufgabe wurde erfolgreich gelöscht")
+        else : 
+         print("Diese Aufgabe existiert nicht !!")
+        
       
+
+manager = ToDoManager()
 
 while True : 
     print("________________________")
@@ -33,14 +40,14 @@ while True :
 
     if wahl == 1 : 
         print("Deine Aufgabe : ")
-        show_tasks()
+        manager.show_tasks()
 
     elif wahl == 2 : 
-        add_tasks() 
+        manager.add_tasks() 
         print("Die Aufgabe wurde erfolgreich hinzugefügt !")
 
     elif wahl == 3 : 
-          delete_tasks()
+        manager.delete_tasks()
           
     elif wahl == 4 : 
         print('Tschüss')
