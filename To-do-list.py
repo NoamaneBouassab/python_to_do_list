@@ -4,7 +4,7 @@ import mysql.connector
 class ToDoManager:
     
     def __init__(self):
-        # self.Tasks = ['Coding','Deutsch']
+
         self.db = mysql.connector.connect(
             host = 'localhost',
             user = 'root',
@@ -26,8 +26,7 @@ class ToDoManager:
 
 
     def add_tasks(self) :
-        # new_task = input("Neue Aufgabe hinzufügen: ")
-        # self.Tasks.append(new_task)
+        
         new_task = input("Schreiben Sie bitte die neue Aufgabe : ")
 
         if new_task.strip() : 
@@ -44,13 +43,33 @@ class ToDoManager:
 
 
     def delete_tasks(self) :
-        self.show_tasks()
-        del_nummer = int(input("Geben Sie die Nummer der Aufgabe ein,die Sie löschen möchten : "))
-        if del_nummer <= len(self.Tasks) and del_nummer >=1 : 
-         self.Tasks.pop(del_nummer-1)
-         print("Die Aufgabe wurde erfolgreich gelöscht")
-        else : 
-         print("Diese Aufgabe existiert nicht !!")
+
+        self.cursor.execute("select id, task_name from tasks")
+        tasks = self.cursor.fetchall()
+        
+        if len(tasks) == 0 :
+            print("Deine To_Do_Liste ist leer !! Es gibt keine Aufgaben zum löschen !")
+            return 
+        
+        print("-- Welche Aufgabe möchtest du löschen ? --")
+        for index , task in enumerate(tasks, start=1) : 
+            print(f"{index}- {task[1]}")
+
+        try : 
+            choice = int(input("Wählen Sie die Nummer der Aufgabe : "))
+            
+            if choice >=1 and choice <= len(tasks) : 
+                task_id = tasks[choice-1][0]
+                sql = 'delete from tasks where id = %s'
+                self.cursor.execute(sql,(task_id,))
+                self.db.commit()
+
+                print("Die Aufgabe wurde erfolgreich gelöscht!")
+            else:
+                print("Ungültige Nummer!")
+        except ValueError : 
+            print("Bitte gib eine gültige Zahl ein !")              
+    
         
       
 
