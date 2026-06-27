@@ -1,4 +1,7 @@
 import mysql.connector
+import tkinter as tk
+
+
 
 
 class ToDoManager:
@@ -12,6 +15,32 @@ class ToDoManager:
             database = 'ToDo_DB'
         )
         self.cursor = self.db.cursor()
+
+        self.root = tk.Tk()
+        self.root.title("Meine To-Do Liste")
+        self.root.geometry("500x600")
+        self.root.config(bg ="#f0f0f0")
+
+        self.Label = tk.Label(self.root,text="Meine Aufgaben", font=("Arial 16 bold"), bg="#f0f0f0")
+        self.Label.pack(pady=20)
+
+        self.ListBox = tk.Listbox(self.root,width=40,height=15,font=("Arial 12"))
+        self.ListBox.pack(pady=10)
+
+        self.Entry = tk.Entry(self.root,width=35, font =("Arial 12"))
+        self.Entry.pack(pady=5)
+
+        self.add_Button = tk.Button(self.root,text="Aufgabe hinzüfugen", width=25 
+                                ,bg="#4CAF50",fg="white",font=("Arial 10 bold"))
+        self.add_Button.pack(pady=10)
+
+        self.delete_Button = tk.Button(self.root,text="Aufgabe löschen", width=25 
+                                ,bg="#f44336",fg="white",font=("Arial 10 bold"))
+        self.delete_Button.pack(pady=10)
+
+        self.root.mainloop()
+    
+
 
     def show_tasks(self) : 
        
@@ -75,29 +104,3 @@ class ToDoManager:
 
 manager = ToDoManager()
 
-while True : 
-    print("________________________")
-    print('1- Aufgaben Anzeigen')
-    print('2- Aufgabe hinzufügen')
-    print('3- Aufgabe löschen')
-    print('4- Beenden')
-    print('                 ')
-    wahl = int(input("Wählen Sie die gewünschte Aktion aus : "))
-    print("________________________")
-
-    if wahl == 1 : 
-        print("Deine Aufgabe : ")
-        manager.show_tasks()
-
-    elif wahl == 2 : 
-        manager.add_tasks() 
-        print("Die Aufgabe wurde erfolgreich hinzugefügt !")
-
-    elif wahl == 3 : 
-        manager.delete_tasks()
-          
-    elif wahl == 4 : 
-        print('Tschüss')
-        break
-    else : 
-        print("Falsch Wahl !!!")
