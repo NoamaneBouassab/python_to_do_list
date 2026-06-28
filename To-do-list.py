@@ -1,6 +1,6 @@
 import mysql.connector
 import tkinter as tk
-
+from tkinter import messagebox
 
 
 
@@ -31,12 +31,14 @@ class ToDoManager:
         self.Entry.pack(pady=5)
 
         self.add_Button = tk.Button(self.root,text="Aufgabe hinzüfugen", width=25 
-                                ,bg="#4CAF50",fg="white",font=("Arial 10 bold"))
+                                ,bg="#4CAF50",fg="white",font=("Arial 10 bold"),command=self.add_tasks)
         self.add_Button.pack(pady=10)
 
         self.delete_Button = tk.Button(self.root,text="Aufgabe löschen", width=25 
-                                ,bg="#f44336",fg="white",font=("Arial 10 bold"))
+                                ,bg="#f44336",fg="white",font=("Arial 10 bold"), command=self.delete_tasks)
         self.delete_Button.pack(pady=10)
+
+        self.show_tasks()
 
         self.root.mainloop()
     
@@ -44,60 +46,61 @@ class ToDoManager:
 
     def show_tasks(self) : 
        
+
+        self.ListBox.delete(0,tk.END)
+
+
         self.cursor.execute("Select task_name from tasks")
         tasks = self.cursor.fetchall()
-        if len(tasks) == 0 :
-            print("Deine To-Do-Liste ist leer!")
-        else : 
-            print("--- Deine Aufgaben ---")
-            for index , task in enumerate(tasks,start=1) :
-             print(f'{index}- {task[0]}')
+        
+        
+        for index , task in enumerate(tasks,start=1) :
+             self.ListBox.insert(tk.END, f"{index}- {task[0]}")
+
+
 
 
     def add_tasks(self) :
         
-        new_task = input("Schreiben Sie bitte die neue Aufgabe : ")
+        new_task = self.Entry.get()
 
         if new_task.strip() : 
            sql = "insert into tasks (task_name) Values (%s)"
            val = (new_task,)
            self.cursor.execute(sql,val)
            self.db.commit()
-           print(f'"{new_task}" wurde hinzugefügt ! ')
-        else :
            
-           print('Die Aufgabe darf nicht leer sein !!!')
+           self.Entry.delete(0 , tk.END)
+
+           self.show_tasks()
+           # messagebox.showinfo("Erfolg","Die Aufgabe wurde erfolgreich hinzugefügt!")
+        else : 
+            messagebox.showwarning("Warnung", "Bitte geben Sie einen Aufgabennamen ein!")
+
+        
 
 
 
 
     def delete_tasks(self) :
 
-        self.cursor.execute("select id, task_name from tasks")
-        tasks = self.cursor.fetchall()
         
-        if len(tasks) == 0 :
-            print("Deine To_Do_Liste ist leer !! Es gibt keine Aufgaben zum löschen !")
-            return 
-        
-        print("-- Welche Aufgabe möchtest du löschen ? --")
-        for index , task in enumerate(tasks, start=1) : 
-            print(f"{index}- {task[1]}")
-
         try : 
-            choice = int(input("Wählen Sie die Nummer der Aufgabe : "))
-            
-            if choice >=1 and choice <= len(tasks) : 
-                task_id = tasks[choice-1][0]
-                sql = 'delete from tasks where id = %s'
-                self.cursor.execute(sql,(task_id,))
-                self.db.commit()
+           selected_index = self.ListBox.curselection()[0]
+           
+           selected_task_text = self.ListBox.get(selected_index)
+           task_name = selected_task_text.split("- ",1)[1]
+           
 
-                print("Die Aufgabe wurde erfolgreich gelöscht!")
-            else:
-                print("Ungültige Nummer!")
-        except ValueError : 
-            print("Bitte gib eine gültige Zahl ein !")              
+           sql = 'delete from tasks where task_name = %s'
+           self.cursor.execute(sql,(task_name,))
+           self.db.commit()
+
+           self.show_tasks()
+
+
+        except IndexError:
+            messagebox.showwarning("Warnung", "Bitte wählen Sie zuerst eine Aufgabe aus! ")          
     
         
       
