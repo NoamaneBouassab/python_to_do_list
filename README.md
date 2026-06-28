@@ -1,15 +1,16 @@
 # python_to_do_list
-A desktop To-Do List application built with Python to manage daily tasks efficiently.
+A desktop To-Do List application built with Python (Tkinter GUI) and MySQL to manage daily tasks efficiently.
 
 ## Current Features
-* Show tasks via Terminal with auto-numbering.
-* Add new tasks dynamically.
-* Delete tasks with input validation.
+* A desktop GUI built with Python's Tkinter.
+* Display, add, and delete tasks seamlessly through the interface.
+* pop-up notifications (Success & Warning messages) for input validation.
 
 ## Prerequisites & Technologies
 - **Python 3.11**
 - **MySQL Database**
 - **mysql-connector-python** library
+- **Tkinter** (Built-in Python GUI library)
 
 ## Database Setup
 To run this project locally, you need to import the database structure:
